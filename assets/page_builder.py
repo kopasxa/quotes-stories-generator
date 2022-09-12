@@ -1,14 +1,16 @@
 import re
 import config
-
 class PageBuilder:
     def __init__(self):
         self.page = ""
         self.page_title = ""
-        self.page_poster_path = 'https://images.pexels.com/photos/8162662/pexels-photo-8162662.jpeg'
+        self.page_poster_path = ""
         self.style = config.style_for_page 
         self.story_pages = []
         self.page_link = "" 
+
+    def set_page_poster_path(self, path):
+        self.page_poster_path = path
 
     def set_page_title(self, title):
         self.page_title = title
@@ -16,10 +18,9 @@ class PageBuilder:
     def set_page_link(self, link):
         self.page_link = link
 
-    def set_page_story(self, story_title, story_link, story_path):
+    def set_page_story(self, story_title, story_path):
         self.story_pages.append({
             "title": story_title,
-            "link": story_link,
             "path_to_image": story_path
         })
 
@@ -76,24 +77,40 @@ class PageBuilder:
         return
 
     def build_story_start(self, publisher, publisher_logo):
-        script = '{"ad-attributes": {"type": "adsense","data-ad-client": "ca-pub-5893452305550881","data-ad-slot": "7525101101"}}'
+        script = '{"ad-attributes": {"type": "adsense","data-ad-client": "ca-pub-8546792886714030","data-ad-slot": "4324750676"}}'
         self.page += f"""
     <body>
         <amp-story standalone title="{self.page_title} | Amerikanki" publisher="{publisher}"
             publisher-logo-src="{publisher_logo}" poster-portrait-src="{self.page_poster_path}">
 
-            <amp-ad width="100vw" height="320"
-                type="adsense"
-                data-ad-client="ca-pub-8064390991973365"
-                data-ad-slot="1224845979"
-                data-auto-format="rspv"
-                data-full-width="">
-                <div overflow=""></div>
-            </amp-ad>"""
+            <amp-story-auto-ads>
+                <script type="application/json">
+                {script}
+                </script>
+            </amp-story-auto-ads>"""
         return
 
     def build_end_page(self):
         self.page += """
+            <amp-story-page id="last">
+                <amp-story-grid-layer template="vertical" class="top">
+                    <h2><span class="read">read</span><br><span class="more">more</span></h2>
+                    <amp-img
+                        alt="woman"
+                        src="https://womenosophy.com/womenosophy_logo.png"
+                        width="588"
+                        height="132"
+                        class="image_logo"
+                        layout="responsive"
+                    >
+                    </amp-img>
+                    <h2 class="bttm-text">visit<br><a href="https://womenosophy.com">womenosophy.com</a></h2>
+                </amp-story-grid-layer>
+            
+                <amp-story-page-outlink layout="nodisplay">
+                    <a href="https://womenosophy.com">Read More</a>
+                </amp-story-page-outlink>
+            </amp-story-page>
         </amp-story>
     </body>
 </html>"""
